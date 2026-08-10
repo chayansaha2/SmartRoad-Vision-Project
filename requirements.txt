@@ -1,8 +1,7 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch
 torchvision
-ultralytics
-opencv-python-headless
+ultralytics-opencv-headless
 streamlit
 folium
 streamlit-folium
