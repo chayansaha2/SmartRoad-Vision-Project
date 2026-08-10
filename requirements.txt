@@ -1,6 +1,9 @@
-streamlit
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
 ultralytics
 opencv-python-headless
+streamlit
 folium
 streamlit-folium
 pillow
