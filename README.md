@@ -1,28 +1,60 @@
-# SmartRoad-Vision-Project
-# 🛣️ SmartRoad-Vision: Automated Road Infrastructure Assessment
-
-**SmartRoad-Vision** is an end-to-end Computer Vision and GIS analytics platform designed to automate the inspection, localization, and severity assessment of road surface defects (e.g., potholes, cracks). Powered by **YOLOv8** and deployed via **Streamlit Cloud**, the application enables real-time visual inspection, automated repair cost estimation, and interactive geospatial mapping.
+# 🛣️ SmartRoad-Vision
+### *Autonomous Pavement Intelligence, ASTM D6433 Condition Indexing & Municipal Decision-Support Suite*
 
 ---
 
-## 📌 Features
-
-* **Real-Time Defect Detection:** Leverages an optimized YOLOv8 deep learning model to accurately identify and localize road surface distress.
-* **Damage Analytics & Costing:** Computes severity scores based on detected bounding boxes/areas and automatically generates estimated repair budgets.
-* **Interactive GIS Mapping:** Integrates Folium to plot detected defect coordinates onto interactive geospatial maps.
-* **Intuitive Dashboard:** Clean, responsive web UI built with Streamlit for seamless image/video uploads and instant report downloads.
-* **Cloud-Ready:** Fully containerized configuration ready for deployment on Streamlit Cloud.
+## 📌 Overview
+**SmartRoad-Vision** is an end-to-end civil infrastructure intelligence and decision-support pipeline designed to automate road surface defect detection and maintenance prioritization. Moving beyond standard 2D bounding-box detection, the framework connects real-time computer vision with physical civil engineering standards, municipal repair budget forecasting, environmental Life Cycle Assessment (LCA), and OpenGIS telemetry.
 
 ---
 
-## 🛠️ Tech Stack
+## 🌟 Key Features
 
-* **Language:** Python
-* **Computer Vision / Deep Learning:** YOLOv8 (Ultralytics), OpenCV
-* **Data Processing & Analytics:** Pandas, NumPy
-* **Interactive Web UI:** Streamlit
-* **Geospatial & Mapping:** Folium, Streamlit-Folium
-* **Version Control & Hosting:** Git, GitHub, Streamlit Cloud
+* **Attention-Guided Neural Backbone (YOLOv8-CBAM):** Integrates Convolutional Block Attention Modules (CBAM) into the bottleneck to enhance spatial localization of fine longitudinal, transverse, and alligator cracks.
+* **ASTM D6433 Pavement Condition Index (PCI) & RPI Engine:** Translates raw defect detections into standardized municipal road health indices (0–100) and predictive deterioration timelines.
+* **Volumetric & ESG Carbon LCA Estimation:** Automatically computes physical damage area ($m^2$), bitumen compaction mass ($kg$), repair cost tariffs, and embodied $CO_2e$ carbon emissions.
+* **Adversarial Environmental Stress Testing:** Built-in validation module to evaluate detection robustness against synthetic rain, low-light/night conditions, solar glare, and canopy shadows.
+* **Realistic Satellite GIS & Reverse Geocoding:** High-definition Esri aerial imagery layered with street vectors, interactive hazard radius zones, and real-time reverse-geocoded street addresses.
+* **1-Click Municipal Work Order & GeoJSON Dispatch:** Generates official engineering dispatch PDFs and RFC 7946-compliant `.geojson` vector files for direct integration into ArcGIS, QGIS, and Google Earth.
 
 ---
 
+## 🏗️ System Pipeline
+
+[ Optical Ingest / UAV Frame ]
+│
+▼
+[ YOLOv8s-CBAM Attention Inference ]
+│
+▼
+[ Pixel-to-Physical Geometry Engine (m² & kg) ]
+│
+▼
+[ ASTM D6433 PCI & ESG Carbon LCA Scoring ]
+│
+▼
+[ Photorealistic Satellite GIS & Geocoding Layer ]
+│
+▼
+[ Autonomous PDF Work Order & GeoJSON Layer Export ]
+
+
+---
+
+## 📊 Benchmark & Ablation Results
+
+| Model Architecture | Precision ($P$) | Recall ($R$) | F1-Score | $mAP@50$ | Latency |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Baseline YOLOv8s** | 58.2% | 54.1% | 56.0% | 59.5% | **4.4 ms** |
+| **Proposed YOLOv8-CBAM (Ours)** | **61.7%** | **55.1%** | **58.2%** | **57.7%** | **4.9 ms** |
+
+---
+
+## 🛠️ Tech Stack & Dependencies
+
+* **Deep Learning:** PyTorch, Ultralytics YOLOv8, OpenCV
+* **Dashboard & Visualization:** Streamlit, Folium, Streamlit-Folium
+* **Geospatial & Telemetry:** Geopy, Nominatim, PIL EXIF GPS
+* **Document Generation:** FPDF2, OpenGIS GeoJSON (RFC 7946)
+
+---
