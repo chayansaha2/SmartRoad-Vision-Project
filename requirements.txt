@@ -8,3 +8,10 @@ streamlit-folium
 pillow
 pandas
 numpy
+ultralytics-opencv-headless
+streamlit
+streamlit-folium
+folium
+pandas
+fpdf2
+geopy
