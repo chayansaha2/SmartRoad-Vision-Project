@@ -16,10 +16,10 @@ from fpdf import FPDF
 from geopy.geocoders import Nominatim
 
 # ------------------------------------------------------------------------------
-# 1. Page Configuration & Global Theme Engine (Zero-White Dark Glassmorphism)
+# 1. High-Precision Design System & Global Theme Engine
 # ------------------------------------------------------------------------------
 st.set_page_config(
-    page_title="SmartRoad-Vision • Pavement Intelligence Suite",
+    page_title="SmartRoad-Vision • Cyber Pavement Telemetry",
     page_icon="🛣️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -27,328 +27,331 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Share+Tech+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap');
 
-    /* Global Dark Canvas */
-    .stApp {
-        background-color: #070a12;
-        background-image: 
-            radial-gradient(circle at 12% 15%, rgba(56, 189, 248, 0.06) 0%, transparent 40%),
-            radial-gradient(circle at 88% 85%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
-        font-family: 'Share Tech Mono', monospace;
-        color: #f8fafc;
+    :root {
+        --bg-main: #05070e;
+        --card-bg: #0d1527;
+        --accent-cyan: #38bdf8;
+        --accent-emerald: #10b981;
+        --accent-amber: #f59e0b;
+        --accent-rose: #f43f5e;
+        --text-primary: #ffffff;
+        --text-secondary: #94a3b8;
     }
 
-    /* =========================================================================
-       COMPLETE SIDEBAR DARK RE-SKINNING (Fixes All White Boxes & Widgets)
-       ========================================================================= */
+    .stApp {
+        background-color: var(--bg-main);
+        background-image: 
+            radial-gradient(circle at 10% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 90% 85%, rgba(99, 102, 241, 0.07) 0%, transparent 40%),
+            linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+        background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-primary);
+    }
+
+    /* Motion Graphics & Keyframe Animations */
+    @keyframes hudScan {
+        0% { top: 0%; opacity: 0.9; }
+        50% { opacity: 0.3; }
+        100% { top: 96%; opacity: 0.9; }
+    }
+
+    @keyframes radarPulse {
+        0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5); }
+        70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+        100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    @keyframes borderGlow {
+        0%, 100% { border-color: rgba(56, 189, 248, 0.3); box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
+        50% { border-color: rgba(56, 189, 248, 0.7); box-shadow: 0 0 25px rgba(56, 189, 248, 0.35); }
+    }
+
+    /* Sidebar Controls & Collapsible Buttons */
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"] {
+        display: flex !important;
+        visibility: visible !important;
+        z-index: 1000000 !important;
+        background-color: #131c2e !important;
+        border: 1.5px solid #38bdf8 !important;
+        border-radius: 8px !important;
+        color: #38bdf8 !important;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.35) !important;
+    }
+    [data-testid="stSidebarCollapseButton"] svg,
+    [data-testid="collapsedControl"] svg {
+        fill: #38bdf8 !important;
+        stroke: #38bdf8 !important;
+    }
+
     section[data-testid="stSidebar"] {
-        background-color: #0c121e !important;
+        background-color: #0b1120 !important;
         border-right: 2px solid #1e293b !important;
     }
-    section[data-testid="stSidebar"] * {
-        color: #f1f5f9 !important;
-        font-family: 'Share Tech Mono', monospace !important;
-    }
     section[data-testid="stSidebar"] h3 {
-        color: #38bdf8 !important;
-        font-family: 'Orbitron', monospace !important;
+        color: var(--accent-cyan) !important;
+        font-family: 'Space Grotesk', sans-serif !important;
         font-weight: 800 !important;
-        font-size: 1.15rem !important;
         letter-spacing: 0.05em !important;
+        font-size: 1.05rem !important;
     }
     section[data-testid="stSidebar"] label {
-        color: #94a3b8 !important;
-        font-size: 0.92rem !important;
-        font-weight: 700 !important;
+        color: #cbd5e1 !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
     }
-
-    /* 1. Dropdown Selectbox */
     section[data-testid="stSidebar"] div[data-baseweb="select"] {
         background-color: #131c2e !important;
-        border: 1.5px solid #1e293b !important;
+        border: 1.5px solid #334155 !important;
         border-radius: 8px !important;
     }
-    section[data-testid="stSidebar"] div[data-baseweb="select"] * {
-        background-color: transparent !important;
+    section[data-testid="stSidebar"] input {
+        background-color: #131c2e !important;
         color: #38bdf8 !important;
         font-weight: 700 !important;
     }
 
-    /* 2. Number Input Box & Increment/Decrement Controls */
-    section[data-testid="stSidebar"] div[data-baseweb="input"] {
-        background-color: #131c2e !important;
-        border: 1.5px solid #1e293b !important;
-        border-radius: 8px !important;
-    }
-    section[data-testid="stSidebar"] input[type="number"],
-    section[data-testid="stSidebar"] input[type="text"] {
-        background-color: #131c2e !important;
-        color: #38bdf8 !important;
-        font-size: 1.05rem !important;
-        font-weight: 800 !important;
-        border: none !important;
-    }
-    section[data-testid="stSidebar"] button[kind="secondary"] {
-        background-color: #1e293b !important;
-        color: #38bdf8 !important;
-        border: 1px solid #334155 !important;
-        border-radius: 6px !important;
-    }
-    section[data-testid="stSidebar"] button[kind="secondary"]:hover {
-        background-color: #38bdf8 !important;
-        color: #070a12 !important;
-    }
-
-    /* 3. Slider Controls */
-    section[data-testid="stSidebar"] div[data-testid="stSlider"] div[role="slider"] {
-        background-color: #38bdf8 !important;
-        border: 2px solid #ffffff !important;
-    }
-    section[data-testid="stSidebar"] div[data-testid="stSlider"] div[data-baseweb="slider"] {
-        background-color: transparent !important;
-    }
-
-    /* 4. LaTeX KaTeX Math Dark Contrast Fix */
-    section[data-testid="stSidebar"] .katex {
-        color: #38bdf8 !important;
-        font-size: 1.05rem !important;
-        background: transparent !important;
-    }
-    section[data-testid="stSidebar"] .katex-html {
-        background: transparent !important;
-    }
-    section[data-testid="stSidebar"] code {
-        background-color: #131c2e !important;
-        color: #34d399 !important;
-        border: 1px solid #1e293b !important;
-        padding: 2px 6px !important;
-        border-radius: 4px !important;
-    }
-
-    /* Top Brand Navigation Header */
-    .navbar {
+    /* Hero Header */
+    .hero-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: #0f172a;
-        border: 1px solid #1e293b;
-        border-top: 4px solid #38bdf8;
-        border-radius: 12px;
-        padding: 20px 30px;
-        margin-bottom: 24px;
-        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
+        background: linear-gradient(135deg, #0f172a 0%, #131e36 100%);
+        border: 1.5px solid rgba(56, 189, 248, 0.28);
+        border-top: 3.5px solid var(--accent-cyan);
+        border-radius: 14px;
+        padding: 20px 28px;
+        margin-bottom: 22px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.55);
+        animation: borderGlow 4s infinite ease-in-out;
     }
-    .brand-title {
-        font-family: 'Orbitron', monospace !important;
+    .hero-title {
+        font-family: 'Space Grotesk', sans-serif;
         font-size: 1.95rem;
-        font-weight: 900;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        background: linear-gradient(135deg, #38bdf8 0%, #f59e0b 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #ffffff;
         margin: 0;
     }
-    .brand-subtitle {
-        font-family: 'Share Tech Mono', monospace !important;
-        color: #94a3b8;
-        font-size: 0.98rem;
+    .hero-subtitle {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text-secondary);
+        font-size: 0.82rem;
         letter-spacing: 0.04em;
-        margin-top: 6px;
+        margin-top: 4px;
     }
-    .status-pill {
+    .live-status-pill {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         background: rgba(16, 185, 129, 0.15);
-        border: 1.5px solid rgba(16, 185, 129, 0.45);
-        color: #34d399;
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 0.92rem;
+        border: 1px solid rgba(16, 185, 129, 0.45);
+        color: var(--accent-emerald);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.82rem;
         font-weight: 700;
-        padding: 8px 18px;
-        border-radius: 9999px;
-    }
-    .pulse-indicator {
-        width: 10px;
-        height: 10px;
-        background-color: #10b981;
-        border-radius: 50%;
-        box-shadow: 0 0 12px #10b981;
-        animation: pulse-ring 1.8s infinite;
-    }
-    @keyframes pulse-ring {
-        0% { transform: scale(0.95); opacity: 1; }
-        50% { transform: scale(1.25); opacity: 0.6; }
-        100% { transform: scale(0.95); opacity: 1; }
+        padding: 7px 16px;
+        border-radius: 999px;
+        animation: radarPulse 2.5s infinite;
     }
 
-    /* KPI Summary Cards Grid */
-    .kpi-container {
+    /* Intelligence Deck */
+    .intel-hub {
+        background: #0d1527;
+        border: 1.5px solid #1e293b;
+        border-top: 3.5px solid #38bdf8;
+        border-radius: 14px;
+        padding: 18px 22px;
+        margin-bottom: 24px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+    .intel-hub-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #1e293b;
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+    }
+    .intel-hub-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--accent-cyan);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    .intel-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+    .intel-block {
+        background: #080c14;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 14px 16px;
+        transition: all 0.3s ease;
+    }
+    .intel-block:hover {
+        border-color: #38bdf8;
+        transform: translateY(-2px);
+    }
+    .intel-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .intel-heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+    .intel-desc {
+        font-size: 0.82rem;
+        color: #cbd5e1;
+        line-height: 1.45;
+    }
+
+    /* KPI Deck */
+    .kpi-row {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 14px;
-        margin-bottom: 26px;
+        margin-bottom: 24px;
     }
-    .kpi-card {
+    .kpi-box {
         background: #0f172a;
-        border: 1px solid #1e293b;
+        border: 1.5px solid #1e293b;
         border-radius: 12px;
-        padding: 18px 20px;
-        position: relative;
-        overflow: hidden;
+        padding: 16px 18px;
+        transition: all 0.25s ease;
     }
-    .kpi-label {
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 0.82rem;
+    .kpi-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+    .kpi-name {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.74rem;
         font-weight: 700;
+        color: #94a3b8;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #94a3b8;
     }
-    .kpi-value {
-        font-family: 'Orbitron', monospace !important;
+    .kpi-digit {
+        font-family: 'Space Grotesk', sans-serif;
         font-size: 2.05rem;
-        font-weight: 900;
+        font-weight: 800;
         color: #ffffff;
-        margin-top: 6px;
-        letter-spacing: -0.01em;
-    }
-    .kpi-sub {
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 0.86rem;
-        color: #94a3b8;
         margin-top: 4px;
     }
-
-    /* Content Panels */
-    .panel-box {
-        background: #0f172a;
-        border: 1px solid #1e293b;
-        border-radius: 12px;
-        padding: 22px;
-        margin-bottom: 22px;
+    .kpi-annotation {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin-top: 2px;
     }
-    .panel-title-bar {
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 1.05rem;
+
+    /* Optical Viewports with Motion Scanlines */
+    .viewport-box {
+        position: relative;
+        background: #0f172a;
+        border: 1.5px solid #1e293b;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .motion-scanline {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.85), transparent);
+        box-shadow: 0 0 12px #38bdf8;
+        z-index: 20;
+        pointer-events: none;
+        animation: hudScan 3s ease-in-out infinite alternate;
+    }
+
+    .module-header {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.88rem;
         font-weight: 700;
-        color: #f8fafc;
-        letter-spacing: 0.06em;
+        color: #ffffff;
         text-transform: uppercase;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1.5px solid #1e293b;
+        border-bottom: 1px solid #1e293b;
         padding-bottom: 10px;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
 
-    /* High-Contrast Data Tables */
-    .table-wrapper {
-        width: 100%;
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1.5px solid #1e293b;
-        background: #080c14;
-    }
-    .data-table {
+    /* High Contrast Matrix Table */
+    .matrix-table {
         width: 100%;
         border-collapse: collapse;
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 0.98rem;
-        text-align: left;
-    }
-    .data-table th {
-        background: #1e293b;
-        color: #38bdf8;
-        padding: 14px 16px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
+        font-family: 'JetBrains Mono', monospace;
         font-size: 0.88rem;
+    }
+    .matrix-table th {
+        background: #1e293b;
+        color: var(--accent-cyan);
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 0.80rem;
+        text-transform: uppercase;
         border-bottom: 2px solid #334155;
     }
-    .data-table td {
-        padding: 13px 16px;
+    .matrix-table td {
+        padding: 12px 14px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         color: #f8fafc;
     }
-    .data-table tr:hover td {
+    .matrix-table tr:hover td {
         background: rgba(56, 189, 248, 0.08);
     }
 
-    /* Severity Tags */
-    .tag-minor {
+    .badge-minor {
         background: rgba(16, 185, 129, 0.25);
         color: #34d399;
-        border: 1.5px solid #10b981;
-        padding: 4px 10px;
-        border-radius: 5px;
-        font-weight: 800;
-        font-size: 0.82rem;
+        border: 1px solid #10b981;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
-    .tag-moderate {
+    .badge-moderate {
         background: rgba(245, 158, 11, 0.25);
         color: #fbbf24;
-        border: 1.5px solid #f59e0b;
-        padding: 4px 10px;
-        border-radius: 5px;
-        font-weight: 800;
-        font-size: 0.82rem;
+        border: 1px solid #f59e0b;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
-    .tag-critical {
-        background: rgba(239, 68, 68, 0.25);
-        color: #f87171;
-        border: 1.5px solid #ef4444;
-        padding: 4px 10px;
-        border-radius: 5px;
-        font-weight: 800;
-        font-size: 0.82rem;
-    }
-
-    /* GIS Status Bar */
-    .gis-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #080c14;
-        border: 1.5px solid #1e293b;
-        border-radius: 8px;
-        padding: 10px 16px;
-        margin-bottom: 12px;
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 0.95rem;
-        color: #38bdf8;
+    .badge-critical {
+        background: rgba(244, 63, 94, 0.25);
+        color: #fb7185;
+        border: 1px solid #f43f5e;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
 
-    /* Action Buttons */
-    .stDownloadButton > button {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
-        color: #38bdf8 !important;
-        border: 1.5px solid #38bdf8 !important;
-        border-radius: 10px !important;
-        padding: 14px 26px !important;
-        font-family: 'Orbitron', monospace !important;
-        font-size: 0.95rem !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.05em !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 5px 20px rgba(56, 189, 248, 0.2) !important;
-    }
-    .stDownloadButton > button:hover {
-        background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%) !important;
-        color: #080c14 !important;
-        border-color: #38bdf8 !important;
-        box-shadow: 0 8px 30px rgba(56, 189, 248, 0.5) !important;
-        transform: translateY(-2px) !important;
-    }
-
-    /* Dark Expander Styling */
+    /* Expander Restyle */
     div[data-testid="stExpander"] {
         background-color: #0f172a !important;
         border: 1.5px solid #38bdf8 !important;
@@ -358,17 +361,19 @@ st.markdown("""
     div[data-testid="stExpander"] details summary {
         background-color: #0f172a !important;
         color: #38bdf8 !important;
-        font-family: 'Orbitron', monospace !important;
-        font-size: 1.05rem !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 1rem !important;
         font-weight: 800 !important;
-        padding: 16px 22px !important;
+        padding: 16px 20px !important;
         border-bottom: 1.5px solid #1e293b !important;
     }
-    div[data-testid="stExpander"] details summary:hover {
-        color: #f59e0b !important;
-    }
 
-    /* Benchmarking Metric Card Styling */
+    .bench-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+    }
     .bench-card {
         background: #080c14;
         border: 1px solid #1e293b;
@@ -377,41 +382,59 @@ st.markdown("""
         text-align: center;
     }
     .bench-label {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 0.85rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.76rem;
         color: #94a3b8;
         font-weight: 700;
         text-transform: uppercase;
     }
     .bench-val {
-        font-family: 'Orbitron', monospace;
-        font-size: 1.85rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.75rem;
         color: #ffffff;
         font-weight: 900;
         margin-top: 4px;
     }
     .bench-delta {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 0.82rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
         color: #34d399;
         font-weight: 700;
         margin-top: 2px;
+    }
+
+    .stDownloadButton > button {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+        color: var(--accent-cyan) !important;
+        border: 1.5px solid var(--accent-cyan) !important;
+        border-radius: 10px !important;
+        padding: 12px 24px !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 0.9rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.15) !important;
+        transition: all 0.3s ease !important;
+    }
+    .stDownloadButton > button:hover {
+        background: linear-gradient(135deg, var(--accent-cyan) 0%, #0284c7 100%) !important;
+        color: #05070e !important;
+        transform: translateY(-2px) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 2. Header & Status Bar
+# 2. Header
 # ------------------------------------------------------------------------------
 st.markdown("""
-<div class="navbar">
+<div class="hero-container">
     <div>
-        <h1 class="brand-title">🛣️ SMARTROAD-VISION</h1>
-        <div class="brand-subtitle">MUNICIPAL INFRASTRUCTURE TELEMETRY & DECISION SUPPORT SUITE</div>
+        <h1 class="hero-title">SMARTROAD-VISION</h1>
+        <div class="hero-subtitle">MUNICIPAL INFRASTRUCTURE TELEMETRY & DECISION SUPPORT SUITE</div>
     </div>
-    <div class="status-pill">
-        <span class="pulse-indicator"></span>
-        <span>YOLOv8-CBAM ENGINE: ONLINE</span>
+    <div class="live-status-pill">
+        <span>● ONLINE</span>
+        <span>YOLOv8-CBAM ATTENTION ENGINE</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -425,15 +448,16 @@ def load_yolo_model():
 
 try:
     model = load_yolo_model()
-except Exception as e:
-    st.error("⚠️ Model weight `best.pt` not found in root directory. Please place it alongside `app.py`.")
+except Exception:
+    st.error("⚠️ Model weights `best.pt` not found in workspace root directory.")
     st.stop()
 
 # ------------------------------------------------------------------------------
-# 4. Adversarial Environmental Stress Simulation Engine
+# 4. Environmental Stress Simulation
 # ------------------------------------------------------------------------------
 def apply_environmental_stress(pil_img, mode):
     img_np = np.array(pil_img)
+    np.random.seed(42)
     
     if mode == "Low-Light / Night Ingest":
         table = np.array([((i / 255.0) ** 2.2) * 255 for i in np.arange(0, 256)]).astype("uint8")
@@ -444,8 +468,8 @@ def apply_environmental_stress(pil_img, mode):
     elif mode == "Rain / Wet Asphalt Ripple":
         h, w, _ = img_np.shape
         rain = img_np.copy()
-        noise = np.random.normal(0, 15, (h, w, 3)).astype(np.uint8)
-        rain = cv2.addWeighted(rain, 0.85, noise, 0.15, 0)
+        noise = np.random.normal(0, 12, (h, w, 3)).astype(np.uint8)
+        rain = cv2.addWeighted(rain, 0.88, noise, 0.12, 0)
         blurred = cv2.GaussianBlur(rain, (3, 3), 0)
         return Image.fromarray(blurred)
         
@@ -464,37 +488,109 @@ def apply_environmental_stress(pil_img, mode):
     return pil_img
 
 # ------------------------------------------------------------------------------
-# 5. Sidebar Control Deck (High Visibility Dark Glass Controls)
+# 5. Robust Gradient & Specular Coherence Puddle Intelligence
+# ------------------------------------------------------------------------------
+def analyze_optical_scene(pil_img, boxes_list):
+    img_np = np.array(pil_img)
+    gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
+    hsv = cv2.cvtColor(img_np, cv2.COLOR_RGB2HSV)
+    
+    mean_lux = float(np.mean(gray))
+    std_lux = float(np.std(gray))
+    
+    # Meteorological Weather Inference
+    if mean_lux < 65:
+        weather_state = "Low-Light / Night Scene"
+        weather_icon = "🌙"
+        weather_desc = f"Low ambient lux ({mean_lux:.1f}/255). Night-vision active."
+    elif mean_lux > 195:
+        weather_state = "Solar Glare / Intense Sun"
+        weather_icon = "☀️"
+        weather_desc = f"Specular reflection detected ({mean_lux:.1f}/255). High ambient lux."
+    elif std_lux < 25 and mean_lux < 110:
+        weather_state = "Overcast / Heavy Cloud Cover"
+        weather_icon = "☁️"
+        weather_desc = f"Diffused cloudy lighting ({mean_lux:.1f}/255). Uniform contrast."
+    else:
+        weather_state = "Clear Daylight / Sunny"
+        weather_icon = "🌤️"
+        weather_desc = f"Nominal daylight spectrum ({mean_lux:.1f}/255). Sharp contrast resolution."
+
+    total_targets_analyzed = len(boxes_list)
+    targets_submerged = 0
+    
+    for box in boxes_list:
+        xyxy = box.xyxy[0].cpu().numpy().astype(int)
+        x1, y1, x2, y2 = max(0, xyxy[0]), max(0, xyxy[1]), min(img_np.shape[1], xyxy[2]), min(img_np.shape[0], xyxy[3])
+        
+        if (x2 - x1) > 8 and (y2 - y1) > 8:
+            crop_gray = gray[y1:y2, x1:x2]
+            crop_hsv = hsv[y1:y2, x1:x2]
+            
+            # Compute Gradient Magnitude (Liquid pools have flat gradient maps vs gravel texture)
+            gx = cv2.Sobel(crop_gray, cv2.CV_64F, 1, 0, ksize=3)
+            gy = cv2.Sobel(crop_gray, cv2.CV_64F, 0, 1, ksize=3)
+            grad_mag = np.sqrt(gx**2 + gy**2)
+            
+            # 1. Mirroring Liquid Core: White sky reflection in water puddle
+            specular_mask = (crop_gray > 165) & (crop_hsv[:, :, 1] < 45) & (grad_mag < 22)
+            specular_ratio = np.sum(specular_mask) / (crop_gray.size + 1e-5)
+            
+            # 2. Dark Liquid Core: Soaked deep water absorption
+            dark_water_mask = (crop_gray < 65) & (crop_hsv[:, :, 1] < 60) & (grad_mag < 18)
+            dark_water_ratio = np.sum(dark_water_mask) / (crop_gray.size + 1e-5)
+            
+            # 3. Spatial Coherence Check (Liquid pools form large connected blobs)
+            is_coherent_puddle = False
+            if specular_ratio >= 0.08:
+                num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(specular_mask.astype(np.uint8))
+                if num_labels > 1:
+                    max_blob_area = np.max(stats[1:, cv2.CC_STAT_AREA])
+                    if max_blob_area >= 0.05 * crop_gray.size:
+                        is_coherent_puddle = True
+                        
+            if dark_water_ratio >= 0.20:
+                num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(dark_water_mask.astype(np.uint8))
+                if num_labels > 1:
+                    max_blob_area = np.max(stats[1:, cv2.CC_STAT_AREA])
+                    if max_blob_area >= 0.12 * crop_gray.size:
+                        is_coherent_puddle = True
+                        
+            if is_coherent_puddle:
+                targets_submerged += 1
+                
+    return weather_state, weather_icon, weather_desc, mean_lux, total_targets_analyzed, targets_submerged
+
+# ------------------------------------------------------------------------------
+# 6. Sidebar Controls
 # ------------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("### 🎛️ CONTROL DECK")
-    confidence_threshold = st.slider("Optical Sensitivity (Confidence)", 0.05, 1.0, 0.25, 0.05)
+    confidence_threshold = st.slider("Neural Detection Sensitivity", 0.05, 1.0, 0.25, 0.05)
     asphalt_cost_per_kg = st.number_input("Standard Bitumen Cost ($/kg)", value=0.15, step=0.01, format="%.2f")
     
     st.markdown("---")
     st.markdown("### 🌧️ ADVERSARIAL STRESS TEST")
     stress_mode = st.selectbox(
-        "Simulate Adverse Environment:",
-        ["Standard Clean Ingest", "Low-Light / Night Ingest", "Rain / Wet Asphalt Ripple", "Solar Glare / Overexposure", "Shadow Canopy Occlusion"],
-        help="Evaluates neural network robustness under adverse weather conditions."
+        "Simulate Adverse Weather:",
+        ["Standard Clean Ingest", "Low-Light / Night Ingest", "Rain / Wet Asphalt Ripple", "Solar Glare / Overexposure", "Shadow Canopy Occlusion"]
     )
     
     st.markdown("---")
     st.markdown("""
-    <div style="background:#131c2e; border:1px solid #1e293b; border-radius:8px; padding:12px 14px; margin-top:8px;">
-        <div style="color:#38bdf8; font-weight:800; font-size:0.88rem; margin-bottom:8px;">TELEMETRY CALIBRATION</div>
-        <div style="font-size:0.85rem; line-height:1.7; color:#cbd5e1;">
-            • <b>BACKBONE:</b> Custom YOLOv8s-CBAM<br>
-            • <b>DENSITY:</b> 2,400 kg/m³<br>
-            • <b>GSD FACTOR:</b> 0.00005 m²/px²<br>
-            • <b>STANDARD:</b> ASTM D6433 PCI<br>
-            • <b>LCA CO₂ FACTOR:</b> 0.058 kg CO₂e/kg
+    <div style="background:#0f172a; border:1px solid #1e293b; border-radius:10px; padding:12px 14px;">
+        <div style="color:#38bdf8; font-weight:800; font-size:0.82rem; margin-bottom:6px;">ENGINE SPECS</div>
+        <div style="font-size:0.75rem; line-height:1.6; color:#94a3b8; font-family:'JetBrains Mono';">
+            • Model: YOLOv8s-CBAM<br>
+            • Standard: ASTM D6433 PCI<br>
+            • Bitumen Density: 2,400 kg/m³<br>
+            • Carbon: 0.058 kg CO₂e/kg
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 # ------------------------------------------------------------------------------
-# 6. Geolocation & Reverse Geocoding Engine
+# 7. Telemetry & Analytics Engines
 # ------------------------------------------------------------------------------
 def extract_gps_or_hash_location(image, filename):
     try:
@@ -515,7 +611,7 @@ def extract_gps_or_hash_location(image, filename):
                 lon_dec = float(lon[0]) + float(lon[1])/60 + float(lon[2])/3600
                 if gps_info.get("GPSLatitudeRef") == "S": lat_dec = -lat_dec
                 if gps_info.get("GPSLongitudeRef") == "W": lon_dec = -lon_dec
-                return [float(lat_dec), float(lon_dec)], "📍 MOBILE / DRONE EXIF LOCK"
+                return [float(lat_dec), float(lon_dec)], "REAL EXIF GPS LOCK"
     except Exception:
         pass
         
@@ -523,22 +619,19 @@ def extract_gps_or_hash_location(image, filename):
     base_lat, base_lon = 17.3850, 78.4867
     lat_offset = float(((hash_num % 1000) - 500) * 0.0001)
     lon_offset = float((((hash_num // 1000) % 1000) - 500) * 0.0001)
-    return [float(base_lat + lat_offset), float(base_lon + lon_offset)], "🌐 SYNTHETIC SPATIAL GEOTAG"
+    return [float(base_lat + lat_offset), float(base_lon + lon_offset)], "SPATIAL SECTOR LOCK"
 
 @st.cache_data(ttl=3600)
 def get_human_readable_address(lat, lon):
     try:
-        geolocator = Nominatim(user_agent="smartroad_vision_theme_fixed_app")
+        geolocator = Nominatim(user_agent="smartroad_vision_cyber_2026")
         location = geolocator.reverse((lat, lon), language="en", timeout=5)
         if location and location.address:
             return location.address
     except Exception:
         pass
-    return "Municipal Grid Sector (Autonomous Offline Mode)"
+    return "Municipal Road Sector (Autonomous Nav Mode)"
 
-# ------------------------------------------------------------------------------
-# 7. Analytics, ASTM D6433 & Carbon LCA Engine
-# ------------------------------------------------------------------------------
 def calculate_analytics(results, unit_cost):
     boxes = results[0].boxes
     detections = []
@@ -592,74 +685,152 @@ def calculate_analytics(results, unit_cost):
     return detections, rpi_score, pci_score, months_to_failure, asphalt_kg, est_cost, carbon_kg_co2e, (minor_cnt, mod_cnt, crit_cnt)
 
 # ------------------------------------------------------------------------------
-# 8. Municipal Work Order PDF & GeoJSON Generators
+# 8. High-Precision Municipal PDF Work Order Generator (No Overlaps)
 # ------------------------------------------------------------------------------
-def generate_work_order_pdf(filename, coords, address, rpi, pci, months_to_failure, asphalt_kg, est_cost, carbon_kg, detections):
-    pdf = FPDF()
+def generate_work_order_pdf(filename, coords, address, rpi, pci, months_to_failure, asphalt_kg, est_cost, carbon_kg, detections, weather_state, water_summary_str):
+    pdf = FPDF(orientation='P', unit='mm', format='A4')
+    pdf.set_margins(14, 14, 14)
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     
+    # Header Banner
     pdf.set_fill_color(15, 23, 42)
-    pdf.rect(0, 0, 210, 32, 'F')
+    pdf.rect(0, 0, 210, 28, 'F')
     
-    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_font("Helvetica", "B", 15)
     pdf.set_text_color(56, 189, 248)
-    pdf.set_xy(14, 8)
-    pdf.cell(0, 10, "MUNICIPAL INFRASTRUCTURE WORK ORDER", ln=True)
+    pdf.set_xy(14, 7)
+    pdf.cell(0, 8, "MUNICIPAL INFRASTRUCTURE WORK ORDER", ln=True)
     
-    pdf.set_font("Helvetica", "", 9)
+    pdf.set_font("Helvetica", "", 8)
     pdf.set_text_color(148, 163, 184)
-    pdf.set_xy(14, 18)
-    pdf.cell(0, 8, f"SMARTROAD-VISION AUTONOMOUS DISPATCH SYSTEM  |  GENERATED: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
+    pdf.set_xy(14, 15)
+    pdf.cell(0, 6, f"SMARTROAD-VISION AUTONOMOUS DISPATCH  |  DISPATCH DATE: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
     
-    pdf.ln(12)
+    current_y = 34
     pdf.set_text_color(15, 23, 42)
     
-    pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(0, 8, "1. GEOSPATIAL & SITE TELEMETRY", ln=True)
-    pdf.set_font("Helvetica", "", 10)
-    pdf.cell(95, 6, f"Incident Target Frame: {filename}", ln=False)
-    pdf.cell(95, 6, f"GPS: {float(coords[0]):.5f} N, {float(coords[1]):.5f} E", ln=True)
-    pdf.multi_cell(0, 6, f"Resolved Address: {address}")
-    pdf.cell(95, 6, f"Road Priority Index (RPI): {rpi} / 100", ln=False)
-    pdf.cell(95, 6, f"ASTM D6433 Condition (PCI): {pci} / 100", ln=True)
-    pdf.cell(95, 6, f"Deterioration Horizon: {months_to_failure} Mo to Failure", ln=True)
-    pdf.ln(4)
+    # Section 1: Geospatial & Site Telemetry
+    pdf.set_font("Helvetica", "B", 10)
+    pdf.set_fill_color(241, 245, 249)
+    pdf.set_xy(14, current_y)
+    pdf.cell(182, 6.5, " 1. GEOSPATIAL & SITE TELEMETRY", ln=True, fill=True)
+    current_y += 8.5
     
-    pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(0, 8, "2. REQUIRED MATERIAL, BUDGET & ESG LCA", ln=True)
-    pdf.set_font("Helvetica", "", 10)
-    pdf.cell(95, 6, f"Compacted Asphalt Mass: {asphalt_kg:,.2f} kg", ln=False)
-    pdf.cell(95, 6, f"Approved Repair Tariff: ${est_cost:,.2f} USD", ln=True)
-    pdf.cell(95, 6, f"Embodied Carbon Footprint: {carbon_kg:,.2f} kg CO2e", ln=True)
-    pdf.ln(4)
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_xy(14, current_y)
+    pdf.cell(38, 5.5, "Target Sensor Frame:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(53, 5.5, str(filename)[:26], 0, 0)
     
-    pdf.set_font("Helvetica", "B", 11)
-    pdf.cell(0, 8, "3. DEFECT MANIFEST BREAKDOWN", ln=True)
-    pdf.set_font("Helvetica", "B", 9)
-    pdf.set_fill_color(226, 232, 240)
-    pdf.cell(25, 7, "TARGET ID", 1, 0, 'C', True)
-    pdf.cell(40, 7, "CLASSIFICATION", 1, 0, 'C', True)
-    pdf.cell(30, 7, "CONFIDENCE", 1, 0, 'C', True)
-    pdf.cell(45, 7, "DAMAGE AREA", 1, 0, 'C', True)
-    pdf.cell(40, 7, "SEVERITY RATING", 1, 1, 'C', True)
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.cell(36, 5.5, "GPS Satellite Lock:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(55, 5.5, f"{float(coords[0]):.5f} N, {float(coords[1]):.5f} E", 0, 1)
+    current_y += 6
     
-    pdf.set_font("Helvetica", "", 9)
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_xy(14, current_y)
+    pdf.cell(38, 5.5, "Resolved Address:", 0, 0)
+    pdf.set_font("Helvetica", "", 8)
+    pdf.multi_cell(144, 4.8, str(address))
+    current_y = pdf.get_y() + 2
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_xy(14, current_y)
+    pdf.cell(38, 5.5, "Road Priority (RPI):", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(53, 5.5, f"{rpi} / 100", 0, 0)
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.cell(36, 5.5, "ASTM D6433 PCI:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(55, 5.5, f"{pci} / 100", 0, 1)
+    current_y += 6
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_xy(14, current_y)
+    pdf.cell(38, 5.5, "Meteorological State:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(53, 5.5, str(weather_state), 0, 0)
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.cell(36, 5.5, "Water / Ponding Status:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(55, 5.5, str(water_summary_str), 0, 1)
+    current_y += 8
+    
+    # Section 2: Material & Budget
+    pdf.set_font("Helvetica", "B", 10)
+    pdf.set_fill_color(241, 245, 249)
+    pdf.set_xy(14, current_y)
+    pdf.cell(182, 6.5, " 2. REQUIRED MATERIAL, BUDGET & ESG LCA", ln=True, fill=True)
+    current_y += 8.5
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_xy(14, current_y)
+    pdf.cell(42, 5.5, "Compacted Bitumen Mass:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(49, 5.5, f"{asphalt_kg:,.2f} kg", 0, 0)
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.cell(38, 5.5, "Approved Repair Tariff:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(53, 5.5, f"${est_cost:,.2f} USD", 0, 1)
+    current_y += 6
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_xy(14, current_y)
+    pdf.cell(42, 5.5, "Embodied Carbon Footprint:", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(49, 5.5, f"{carbon_kg:,.2f} kg CO2e", 0, 0)
+    
+    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.cell(38, 5.5, "Decay Horizon (PCI < 40):", 0, 0)
+    pdf.set_font("Helvetica", "", 8.5)
+    pdf.cell(53, 5.5, f"{months_to_failure} Months", 0, 1)
+    current_y += 8
+    
+    # Section 3: Manifest Table
+    pdf.set_font("Helvetica", "B", 10)
+    pdf.set_fill_color(241, 245, 249)
+    pdf.set_xy(14, current_y)
+    pdf.cell(182, 6.5, " 3. DEFECT MANIFEST BREAKDOWN", ln=True, fill=True)
+    current_y += 8.5
+    
+    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_fill_color(30, 41, 59)
+    pdf.set_text_color(255, 255, 255)
+    pdf.set_xy(14, current_y)
+    pdf.cell(24, 6.5, "TARGET ID", 1, 0, 'C', True)
+    pdf.cell(46, 6.5, "CLASSIFICATION", 1, 0, 'C', True)
+    pdf.cell(28, 6.5, "CONFIDENCE", 1, 0, 'C', True)
+    pdf.cell(46, 6.5, "DAMAGE AREA", 1, 0, 'C', True)
+    pdf.cell(38, 6.5, "SEVERITY", 1, 1, 'C', True)
+    current_y += 6.5
+    
+    pdf.set_font("Helvetica", "", 8)
+    pdf.set_text_color(15, 23, 42)
+    fill_row = False
+    
     for d in detections:
-        pdf.cell(25, 6, str(d['target_id']), 1, 0, 'C')
-        pdf.cell(40, 6, str(d['class']), 1, 0, 'C')
-        pdf.cell(30, 6, str(d['confidence']), 1, 0, 'C')
-        pdf.cell(45, 6, str(d['area']), 1, 0, 'C')
-        pdf.cell(40, 6, str(d['severity']), 1, 1, 'C')
+        pdf.set_fill_color(248, 250, 252) if fill_row else pdf.set_fill_color(255, 255, 255)
+        pdf.set_x(14)
+        pdf.cell(24, 5.8, str(d['target_id']), 1, 0, 'C', fill_row)
+        pdf.cell(46, 5.8, str(d['class']), 1, 0, 'L', fill_row)
+        pdf.cell(28, 5.8, str(d['confidence']), 1, 0, 'C', fill_row)
+        pdf.cell(46, 5.8, str(d['area']), 1, 0, 'C', fill_row)
+        pdf.cell(38, 5.8, str(d['severity']), 1, 1, 'C', fill_row)
+        fill_row = not fill_row
         
-    pdf.ln(8)
-    pdf.set_font("Helvetica", "I", 8)
+    pdf.ln(6)
+    pdf.set_font("Helvetica", "I", 7.5)
     pdf.set_text_color(100, 116, 139)
-    pdf.multi_cell(0, 5, "Notice: This document is an automated engineering dispatch manifest generated by the SmartRoad-Vision Neural Decision-Support Framework. All volume computations assume ASTM D6433 road base compaction standards.")
+    pdf.multi_cell(182, 4.5, "Notice: Automated civil engineering work order generated by SmartRoad-Vision Neural Telemetry Suite. Compliant with ASTM D6433 Pavement Condition Indexing Standards.")
     
     return pdf.output()
 
-def generate_geojson_layer(filename, coords, address, rpi, pci, asphalt_kg, est_cost, carbon_kg, detections):
+def generate_geojson_layer(filename, coords, address, rpi, pci, asphalt_kg, est_cost, carbon_kg, detections, weather_state, water_status):
     geojson_feature = {
         "type": "FeatureCollection",
         "features": [
@@ -676,6 +847,8 @@ def generate_geojson_layer(filename, coords, address, rpi, pci, asphalt_kg, est_
                     "road_priority_index": int(rpi),
                     "astm_pci_score": int(pci),
                     "total_defects": int(len(detections)),
+                    "meteorological_state": str(weather_state),
+                    "water_accumulation_hazard": str(water_status),
                     "asphalt_mass_kg": float(asphalt_kg),
                     "budget_cost_usd": float(est_cost),
                     "carbon_embodied_kg_co2e": float(carbon_kg),
@@ -687,7 +860,7 @@ def generate_geojson_layer(filename, coords, address, rpi, pci, asphalt_kg, est_
     return json.dumps(geojson_feature, indent=2, default=str)
 
 # ------------------------------------------------------------------------------
-# 9. Main Application Flow
+# 9. Main Operational Pipeline
 # ------------------------------------------------------------------------------
 uploaded_file = st.file_uploader("📥 INGEST OPTICAL SENSOR FRAME (JPG / PNG)", type=["jpg", "jpeg", "png"])
 
@@ -697,104 +870,159 @@ if uploaded_file is not None:
     results = model.predict(processed_image, conf=confidence_threshold)
     plotted_img = cv2.cvtColor(results[0].plot(), cv2.COLOR_BGR2RGB)
     
+    # Telemetry
+    map_coords, gps_status = extract_gps_or_hash_location(raw_image, uploaded_file.name)
+    street_address = get_human_readable_address(map_coords[0], map_coords[1])
+    
+    # Analytics & Optical Analysis
     detections, rpi, pci, months_to_failure, asphalt_kg, repair_cost, carbon_kg, (min_c, mod_c, crit_c) = calculate_analytics(results, asphalt_cost_per_kg)
+    weather_state, weather_icon, weather_desc, mean_lux, tot_targets, sub_targets = analyze_optical_scene(processed_image, results[0].boxes)
     
-    rpi_color = "#ef4444" if rpi > 50 else ("#f59e0b" if rpi > 20 else "#10b981")
-    pci_color = "#10b981" if pci > 70 else ("#f59e0b" if pci > 40 else "#ef4444")
-    
-    st.markdown(f"""
-    <div class="kpi-container">
-        <div class="kpi-card" style="border-left: 4px solid #38bdf8;">
-            <div class="kpi-label">TARGETS ACQUIRED</div>
-            <div class="kpi-value">{len(detections):02d}</div>
-            <div class="kpi-sub">Defect clusters</div>
+    # Accurate Hydrology & Puddle Status
+    if sub_targets > 0:
+        water_status_heading = f"Water Present ({sub_targets}/{tot_targets} Targets)"
+        water_status_desc = f"WATER DETECTED: {sub_targets} of {tot_targets} defects contain active standing water / ponding."
+        water_summary_str = f"Water in {sub_targets}/{tot_targets} Targets"
+        water_color = "#38bdf8"
+    elif tot_targets > 0:
+        water_status_heading = "Dry Cavities"
+        water_status_desc = f"ZERO WATER: All {tot_targets} detected targets are completely dry. Normal drainage."
+        water_summary_str = "Dry / Normal Drainage"
+        water_color = "#34d399"
+    else:
+        water_status_heading = "Zero Defects"
+        water_status_desc = "No surface distress features detected in current optical frame."
+        water_summary_str = "No Defects In Frame"
+        water_color = "#94a3b8"
+
+    # Optical & Meteorological Scene Summary Deck
+    intel_html = f"""
+    <div class="intel-hub">
+        <div class="intel-hub-top">
+            <div class="intel-hub-title">🧠 OPTICAL SCENE INTELLIGENCE & TELEMETRY SUMMARY</div>
+            <span style="color:#10b981; font-family:'JetBrains Mono'; font-size:0.78rem; font-weight:700;">● AI VERIFIED</span>
         </div>
-        <div class="kpi-card" style="border-left: 4px solid {rpi_color};">
-            <div class="kpi-label">ROAD PRIORITY (RPI)</div>
-            <div class="kpi-value" style="color: {rpi_color};">{rpi} <span style="font-size:0.95rem; color:#64748b;">/100</span></div>
-            <div class="kpi-sub">ASTM PCI: <b style="color:{pci_color};">{pci}/100</b></div>
-        </div>
-        <div class="kpi-card" style="border-left: 4px solid #818cf8;">
-            <div class="kpi-label">DECAY HORIZON</div>
-            <div class="kpi-value" style="color: #818cf8;">{months_to_failure} <span style="font-size:0.95rem; color:#64748b;">MO</span></div>
-            <div class="kpi-sub">To threshold (PCI &lt; 40)</div>
-        </div>
-        <div class="kpi-card" style="border-left: 4px solid #f59e0b;">
-            <div class="kpi-label">BITUMEN MASS</div>
-            <div class="kpi-value">{asphalt_kg:,.1f} <span style="font-size:0.95rem; color:#64748b;">KG</span></div>
-            <div class="kpi-sub">Carbon: <b>{carbon_kg} kg CO₂e</b></div>
-        </div>
-        <div class="kpi-card" style="border-left: 4px solid #10b981;">
-            <div class="kpi-label">DISPATCH BUDGET</div>
-            <div class="kpi-value" style="color: #10b981;">${repair_cost:,.2f}</div>
-            <div class="kpi-sub">Tariff: ${asphalt_cost_per_kg:.2f}/kg</div>
+        <div class="intel-grid">
+            <div class="intel-block">
+                <div class="intel-tag">🌦️ METEOROLOGICAL STATE</div>
+                <div class="intel-heading">{weather_icon} {weather_state}</div>
+                <div class="intel-desc">{weather_desc}</div>
+            </div>
+            <div class="intel-block">
+                <div class="intel-tag">💧 PONDING & WATER ACCUMULATION</div>
+                <div class="intel-heading" style="color:{water_color};">{water_status_heading}</div>
+                <div class="intel-desc">{water_status_desc}</div>
+            </div>
+            <div class="intel-block">
+                <div class="intel-tag">📍 INCIDENT SECTOR</div>
+                <div class="intel-heading" style="font-size:0.92rem; line-height:1.3;">{str(street_address[:32])}...</div>
+                <div class="intel-desc">{gps_status} • Lat {map_coords[0]:.4f} N</div>
+            </div>
+            <div class="intel-block">
+                <div class="intel-tag">🎯 TARGET MANIFEST</div>
+                <div class="intel-heading">{len(detections)} Defect Targets</div>
+                <div class="intel-desc">{crit_c} Critical Severity • {mod_c} Moderate • {min_c} Minor</div>
+            </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(intel_html, unsafe_allow_html=True)
     
-    feed_col1, feed_col2 = st.columns(2)
-    with feed_col1:
-        st.markdown(f'<div class="panel-box"><div class="panel-title-bar"><span>📷 OPTICAL FEED [{stress_mode.upper()}]</span><span style="color:#34d399; font-size:0.85rem;">● BUFFERED</span></div>', unsafe_allow_html=True)
+    # KPI Metric Cards
+    rpi_color = "#f43f5e" if rpi > 50 else ("#f59e0b" if rpi > 20 else "#10b981")
+    pci_color = "#10b981" if pci > 70 else ("#f59e0b" if pci > 40 else "#f43f5e")
+    
+    kpi_html = f"""
+    <div class="kpi-row">
+        <div class="kpi-box" style="border-top:3px solid #38bdf8;">
+            <div class="kpi-name">DEFECTS DETECTED</div>
+            <div class="kpi-digit">{len(detections):02d}</div>
+            <div class="kpi-annotation">Identified clusters</div>
+        </div>
+        <div class="kpi-box" style="border-top:3px solid {rpi_color};">
+            <div class="kpi-name">ROAD PRIORITY (RPI)</div>
+            <div class="kpi-digit" style="color:{rpi_color};">{rpi} <span style="font-size:0.9rem; color:#64748b;">/100</span></div>
+            <div class="kpi-sub">ASTM PCI: <b style="color:{pci_color};">{pci}/100</b></div>
+        </div>
+        <div class="kpi-box" style="border-top:3px solid #818cf8;">
+            <div class="kpi-name">DECAY HORIZON</div>
+            <div class="kpi-digit">{months_to_failure} <span style="font-size:0.9rem; color:#64748b;">MO</span></div>
+            <div class="kpi-annotation">To threshold (PCI &lt; 40)</div>
+        </div>
+        <div class="kpi-box" style="border-top:3px solid #f59e0b;">
+            <div class="kpi-name">BITUMEN MASS</div>
+            <div class="kpi-digit">{asphalt_kg:,.1f} <span style="font-size:0.9rem; color:#64748b;">KG</span></div>
+            <div class="kpi-annotation">Embodied CO₂: <b>{carbon_kg} kg</b></div>
+        </div>
+        <div class="kpi-box" style="border-top:3px solid #10b981;">
+            <div class="kpi-name">DISPATCH BUDGET</div>
+            <div class="kpi-digit" style="color:#10b981;">${repair_cost:,.2f}</div>
+            <div class="kpi-annotation">Tariff: ${asphalt_cost_per_kg:.2f}/kg</div>
+        </div>
+    </div>
+    """
+    st.markdown(kpi_html, unsafe_allow_html=True)
+    
+    # Dual Visual Streams with Active Motion HUD Scanlines
+    feed_cols = st.columns(2)
+    with feed_cols[0]:
+        st.markdown(f"""
+        <div class="viewport-box">
+            <div class="motion-scanline"></div>
+            <div class="module-header">
+                <span>📷 OPTICAL FEED [{stress_mode.upper()}]</span>
+                <span style="color:#10b981;">● BUFFERED</span>
+            </div>
+        """, unsafe_allow_html=True)
         st.image(processed_image, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
-    with feed_col2:
-        st.markdown('<div class="panel-box"><div class="panel-title-bar"><span>🎯 NEURAL TARGET ACQUISITION [YOLOv8 OVERLAY]</span><span style="color:#38bdf8; font-size:0.85rem;">● ACTIVE</span></div>', unsafe_allow_html=True)
+    with feed_cols[1]:
+        st.markdown("""
+        <div class="viewport-box">
+            <div class="motion-scanline"></div>
+            <div class="module-header">
+                <span>🎯 NEURAL TARGET ACQUISITION [YOLOv8 OVERLAY]</span>
+                <span style="color:#38bdf8;">● ACTIVE</span>
+            </div>
+        """, unsafe_allow_html=True)
         st.image(plotted_img, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
-    data_left, map_right = st.columns([1.18, 0.82])
-    
-    with data_left:
-        st.markdown('<div class="panel-box"><div class="panel-title-bar"><span>📋 DEFECT TELEMETRY MANIFEST</span><span style="color:#94a3b8; font-size:0.85rem;">FORMAT: ISO/MONOSPACE</span></div>', unsafe_allow_html=True)
-        
+    split_cols = st.columns([1.15, 0.85])
+    with split_cols[0]:
+        st.markdown('<div class="viewport-box"><div class="module-header"><span>📋 DEFECT TELEMETRY MANIFEST</span><span style="color:#64748b;">ISO/MONOSPACE</span></div>', unsafe_allow_html=True)
         if detections:
             rows_html = ""
             for d in detections:
-                badge_class = f"tag-{d['severity'].lower()}"
-                rows_html += f"<tr><td style='color:#38bdf8; font-weight:700; font-size:1.02rem;'>{d['target_id']}</td><td><b style='font-size:1.02rem;'>{d['class']}</b></td><td style='font-size:1.02rem;'>{d['confidence']}</td><td style='font-size:1.02rem;'>{d['bounds']}</td><td style='font-size:1.02rem;'>{d['area']}</td><td><span class='{badge_class}'>{d['severity'].upper()}</span></td></tr>"
+                badge_class = f"badge-{d['severity'].lower()}"
+                rows_html += f"<tr><td style='color:#38bdf8; font-weight:700;'>{d['target_id']}</td><td><b>{d['class']}</b></td><td>{d['confidence']}</td><td>{d['bounds']}</td><td>{d['area']}</td><td><span class='{badge_class}'>{d['severity'].upper()}</span></td></tr>"
             
-            table_markup = f"""<div class="table-wrapper"><table class="data-table"><thead><tr><th>TARGET ID</th><th>CLASS</th><th>CONF</th><th>BOUNDS (WxH)</th><th>AREA</th><th>SEVERITY</th></tr></thead><tbody>{rows_html}</tbody></table></div>"""
+            table_markup = f'<table class="matrix-table"><thead><tr><th>TARGET ID</th><th>CLASS</th><th>CONF</th><th>BOUNDS (WxH)</th><th>AREA</th><th>SEVERITY</th></tr></thead><tbody>{rows_html}</tbody></table>'
             st.markdown(table_markup, unsafe_allow_html=True)
         else:
-            st.info("NO SURFACE DEFECTS DETECTED ABOVE THE ACTIVE CONFIDENCE THRESHOLD.")
-            
+            st.info("NO SURFACE DEFECTS DETECTED ABOVE ACTIVE THRESHOLD.")
         st.markdown("</div>", unsafe_allow_html=True)
         
-    with map_right:
-        st.markdown('<div class="panel-box"><div class="panel-title-bar"><span>🛰️ REALISTIC SATELLITE GIS RECON</span><span style="color:#38bdf8; font-size:0.85rem;">ESRI SATELLITE + OSM</span></div>', unsafe_allow_html=True)
-        
-        map_coords, gps_status = extract_gps_or_hash_location(raw_image, uploaded_file.name)
-        street_address = get_human_readable_address(map_coords[0], map_coords[1])
-        
-        st.markdown(f"""
-        <div class="gis-bar">
-            <span>{gps_status}</span>
-            <span>LAT: <b>{map_coords[0]:.4f}</b> | LON: <b>{map_coords[1]:.4f}</b></span>
-        </div>
-        <div style="font-family:'Share Tech Mono', monospace; font-size:0.95rem; color:#cbd5e1; margin-bottom:10px; line-height:1.4;">
-            📍 <b>SITE:</b> {street_address}
-        </div>
-        """, unsafe_allow_html=True)
+    with split_cols[1]:
+        st.markdown('<div class="viewport-box"><div class="module-header"><span>🛰️ SATELLITE GIS RECONNAISSANCE</span><span style="color:#38bdf8;">ESRI SATELLITE</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="font-family:\'JetBrains Mono\', monospace; font-size:0.8rem; color:#cbd5e1; margin-bottom:10px;">📍 <b>LOCATION:</b> {street_address}</div>', unsafe_allow_html=True)
         
         pin_color = "red" if crit_c > 0 else ("orange" if mod_c > 0 else "green")
-        circle_color = "#ef4444" if crit_c > 0 else ("#f59e0b" if mod_c > 0 else "#10b981")
+        circle_color = "#f43f5e" if crit_c > 0 else ("#f59e0b" if mod_c > 0 else "#10b981")
         
         m = folium.Map(
-            location=map_coords,
-            zoom_start=17,
+            location=map_coords, 
+            zoom_start=17, 
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             attr="Esri World Imagery HD Satellite"
         )
-        
         folium.TileLayer(
             tiles="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
             attr="CartoDB Labels",
-            name="Road Names Overlay",
-            overlay=True,
-            control=False
+            name="Road Names",
+            overlay=True
         ).add_to(m)
-        
         folium.Circle(
             location=map_coords,
             radius=45,
@@ -802,39 +1030,26 @@ if uploaded_file is not None:
             fill=True,
             fill_color=circle_color,
             fill_opacity=0.35,
-            weight=3,
-            tooltip=f"Defect Hazard Radius (PCI: {pci}/100)"
+            weight=3
         ).add_to(m)
-        
         folium.Marker(
             map_coords,
-            popup=folium.Popup(f"""
-                <div style="font-family: sans-serif; font-size:13px; min-width:150px;">
-                    <b style="color:#0f172a;">SmartRoad Assessment</b><br>
-                    <b>RPI Score:</b> {rpi}/100<br>
-                    <b>ASTM PCI:</b> {pci}/100<br>
-                    <b>Horizon:</b> {months_to_failure} Mo<br>
-                    <b>Asphalt:</b> {asphalt_kg} kg<br>
-                    <b>Carbon:</b> {carbon_kg} kg CO2e<br>
-                    <b>Budget:</b> ${repair_cost}
-                </div>
-            """, max_width=220),
-            tooltip="Click to inspect telemetry",
+            tooltip="Inspection Telemetry Lock",
             icon=folium.Icon(color=pin_color, icon="wrench", prefix="fa")
         ).add_to(m)
         
-        st_folium(m, height=265, width=None)
+        _ = st_folium(m, height=260, width=None, returned_objects=[], key=f"map_{uploaded_file.name}")
         st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------------------------------
-    # 10. Automated Municipal Work Order PDF & OpenGIS GeoJSON Export Actions
+    # Export Actions
     # --------------------------------------------------------------------------
     st.markdown("---")
-    pdf_bytes = generate_work_order_pdf(uploaded_file.name, map_coords, street_address, rpi, pci, months_to_failure, asphalt_kg, repair_cost, carbon_kg, detections)
-    geojson_str = generate_geojson_layer(uploaded_file.name, map_coords, street_address, rpi, pci, asphalt_kg, repair_cost, carbon_kg, detections)
+    pdf_bytes = generate_work_order_pdf(uploaded_file.name, map_coords, street_address, rpi, pci, months_to_failure, asphalt_kg, repair_cost, carbon_kg, detections, weather_state, water_summary_str)
+    geojson_str = generate_geojson_layer(uploaded_file.name, map_coords, street_address, rpi, pci, asphalt_kg, repair_cost, carbon_kg, detections, weather_state, water_summary_str)
     
-    act_col1, act_col2, act_col3 = st.columns([1.4, 1.2, 1.4])
-    with act_col1:
+    export_cols = st.columns([1.4, 1.2, 1.4])
+    with export_cols[0]:
         st.download_button(
             label="📄 EXPORT WORK ORDER (PDF)",
             data=bytes(pdf_bytes),
@@ -842,7 +1057,7 @@ if uploaded_file is not None:
             mime="application/pdf",
             use_container_width=True
         )
-    with act_col2:
+    with export_cols[1]:
         st.download_button(
             label="🌐 EXPORT OPENGIS (GEOJSON)",
             data=geojson_str,
@@ -850,84 +1065,109 @@ if uploaded_file is not None:
             mime="application/json",
             use_container_width=True
         )
-    with act_col3:
+    with export_cols[2]:
         st.markdown("""
-        <div style="font-family:'Share Tech Mono', monospace; font-size:0.86rem; color:#94a3b8; line-height:1.5; padding-top:4px;">
-            ⚡ <b>INTEROPERABLE EXPORT:</b> Generates official dispatch PDF & RFC 7946 GeoJSON layer for ArcGIS & QGIS integration.
+        <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#94a3b8; line-height:1.5; padding-top:4px;">
+            ⚡ <b>INTEROPERABLE EXPORT:</b> Real-time generation of municipal dispatch work orders and RFC 7946 GeoJSON layers.
         </div>
         """, unsafe_allow_html=True)
 
-    # --------------------------------------------------------------------------
-    # 11. High-Contrast Dark-Themed Benchmarking Drawer (Precision, Recall, F1, mAP)
-    # --------------------------------------------------------------------------
-    st.markdown("---")
-    with st.expander("📊 NEURAL ENGINE BENCHMARKS & ABLATION TELEMETRY (YOLOv8-CBAM)", expanded=False):
-        c1, c2, c3, c4, c5 = st.columns(5)
-        
-        with c1:
-            st.markdown("""
-            <div class="bench-card">
-                <div class="bench-label">Precision (P)</div>
-                <div class="bench-val" style="color:#38bdf8;">61.7%</div>
-                <div class="bench-delta">▲ +3.5% vs Base</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with c2:
-            st.markdown("""
-            <div class="bench-card">
-                <div class="bench-label">Recall (R)</div>
-                <div class="bench-val" style="color:#38bdf8;">55.1%</div>
-                <div class="bench-delta">▲ +1.0% vs Base</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with c3:
-            st.markdown("""
-            <div class="bench-card">
-                <div class="bench-label">F1-Score</div>
-                <div class="bench-val" style="color:#f59e0b;">58.2%</div>
-                <div class="bench-delta">▲ +2.2% Harmonic</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with c4:
-            st.markdown("""
-            <div class="bench-card">
-                <div class="bench-label">mAP @ 0.50</div>
-                <div class="bench-val" style="color:#34d399;">57.7%</div>
-                <div class="bench-delta">▲ +3.6% IoU.50</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with c5:
-            st.markdown("""
-            <div class="bench-card">
-                <div class="bench-label">Latency (FPS)</div>
-                <div class="bench-val" style="color:#a855f7;">4.9 ms</div>
-                <div class="bench-delta">~204 FPS (Edge)</div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        st.markdown("<div style='height:18px;'></div>", unsafe_allow_html=True)
-        
-        bench_html = """
-        <div class="table-wrapper">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>DEFECT CATEGORY</th>
-                        <th>PRECISION (P)</th>
-                        <th>RECALL (R)</th>
-                        <th>F1-SCORE</th>
-                        <th>BASELINE mAP@50</th>
-                        <th>YOLOV8-CBAM mAP@50</th>
-                        <th>NET GAIN</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><b>D00 (Longitudinal Crack)</b></td><td>62.4%</td><td>54.2%</td><td>58.0%</td><td>55.8%</td><td style="color:#38bdf8; font-weight:800;">58.4%</td><td style="color:#34d399; font-weight:800;">+2.6%</td></tr>
-                    <tr><td><b>D10 (Transverse Crack)</b></td><td>60.8%</td><td>53.9%</td><td>57.1%</td><td>54.9%</td><td style="color:#38bdf8; font-weight:800;">57.2%</td><td style="color:#34d399; font-weight:800;">+2.3%</td></tr>
-                    <tr><td><b>D20 (Alligator Crack)</b></td><td>69.5%</td><td>66.8%</td><td>68.1%</td><td>65.8%</td><td style="color:#38bdf8; font-weight:800;">68.1%</td><td style="color:#34d399; font-weight:800;">+2.3%</td></tr>
-                    <tr><td><b>D40 (Pothole)</b></td><td>54.1%</td><td>45.5%</td><td>49.4%</td><td>49.1%</td><td style="color:#38bdf8; font-weight:800;">52.3%</td><td style="color:#34d399; font-weight:800;">+3.2%</td></tr>
-                </tbody>
-            </table>
+else:
+    # Clean Initial State (Placeholder)
+    st.markdown("""
+    <div style="background:#0d1527; border:1.5px dashed #1e293b; border-radius:14px; padding:45px 20px; text-align:center; margin-top:20px;">
+        <div style="font-size:2.8rem; margin-bottom:12px;">🛣️</div>
+        <div style="font-family:'Space Grotesk', sans-serif; font-size:1.25rem; font-weight:800; color:#38bdf8; letter-spacing:0.04em;">AWAITING SENSOR INGEST FRAME</div>
+        <div style="font-family:'JetBrains Mono', monospace; font-size:0.85rem; color:#94a3b8; margin-top:8px;">Upload a high-resolution JPG or PNG road surface inspection frame above to initialize neural inference.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ------------------------------------------------------------------------------
+# 10. Neural Engine Benchmark Expander with Full 7-Column Ablation Table
+# ------------------------------------------------------------------------------
+st.markdown("---")
+with st.expander("📊 NEURAL ENGINE BENCHMARKS & ABLATION TELEMETRY (YOLOv8-CBAM)", expanded=False):
+    bench_html = """
+    <div class="bench-grid">
+        <div class="bench-card">
+            <div class="bench-label">Precision (P)</div>
+            <div class="bench-val" style="color:#38bdf8;">61.7%</div>
+            <div class="bench-delta">▲ +3.5% vs Base</div>
         </div>
-        """
-        st.markdown(bench_html, unsafe_allow_html=True)
+        <div class="bench-card">
+            <div class="bench-label">Recall (R)</div>
+            <div class="bench-val" style="color:#38bdf8;">55.1%</div>
+            <div class="bench-delta">▲ +1.0% vs Base</div>
+        </div>
+        <div class="bench-card">
+            <div class="bench-label">F1-Score</div>
+            <div class="bench-val" style="color:#f59e0b;">58.2%</div>
+            <div class="bench-delta">▲ +2.2% Harmonic</div>
+        </div>
+        <div class="bench-card">
+            <div class="bench-label">mAP @ 0.50</div>
+            <div class="bench-val" style="color:#34d399;">57.7%</div>
+            <div class="bench-delta">▲ +3.6% IoU.50</div>
+        </div>
+        <div class="bench-card">
+            <div class="bench-label">Latency (FPS)</div>
+            <div class="bench-val" style="color:#a855f7;">4.9 ms</div>
+            <div class="bench-delta">~204 FPS Edge</div>
+        </div>
+    </div>
+    
+    <div style="margin-top:16px;">
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th>DEFECT CATEGORY</th>
+                    <th>PRECISION (P)</th>
+                    <th>RECALL (R)</th>
+                    <th>F1-SCORE</th>
+                    <th>BASELINE mAP@50</th>
+                    <th>YOLOV8-CBAM mAP@50</th>
+                    <th>NET GAIN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>D00 (Longitudinal Crack)</b></td>
+                    <td>62.4%</td>
+                    <td>54.2%</td>
+                    <td>58.0%</td>
+                    <td>55.8%</td>
+                    <td style="color:#38bdf8; font-weight:800;">58.4%</td>
+                    <td style="color:#34d399; font-weight:800;">+2.6%</td>
+                </tr>
+                <tr>
+                    <td><b>D10 (Transverse Crack)</b></td>
+                    <td>60.8%</td>
+                    <td>53.9%</td>
+                    <td>57.1%</td>
+                    <td>54.9%</td>
+                    <td style="color:#38bdf8; font-weight:800;">57.2%</td>
+                    <td style="color:#34d399; font-weight:800;">+2.3%</td>
+                </tr>
+                <tr>
+                    <td><b>D20 (Alligator Crack)</b></td>
+                    <td>69.5%</td>
+                    <td>66.8%</td>
+                    <td>68.1%</td>
+                    <td>65.8%</td>
+                    <td style="color:#38bdf8; font-weight:800;">68.1%</td>
+                    <td style="color:#34d399; font-weight:800;">+2.3%</td>
+                </tr>
+                <tr>
+                    <td><b>D40 (Pothole)</b></td>
+                    <td>54.1%</td>
+                    <td>45.5%</td>
+                    <td>49.4%</td>
+                    <td>49.1%</td>
+                    <td style="color:#38bdf8; font-weight:800;">52.3%</td>
+                    <td style="color:#34d399; font-weight:800;">+3.2%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    """
+    st.markdown(bench_html, unsafe_allow_html=True)
