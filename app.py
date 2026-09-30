@@ -64,6 +64,45 @@ section[data-testid="stSidebar"]{display:none!important}
 /* uploader/empty/bench */
 .empty-state{background:#0b121c;border:1px dashed #31465d;border-radius:14px;padding:38px 20px;text-align:center}.empty-icon{background:#09263a;color:var(--cyan)}.empty-title{color:#eef4fb}.empty-sub{color:#71849c}div[data-testid="stExpander"]{background:#0c121d!important;border:1px solid #29384b!important;border-radius:13px!important;box-shadow:none!important}div[data-testid="stExpander"] details summary{color:#edf3f9!important}.bench-card{background:#0e1622;border:1px solid #263548;border-radius:10px}.bench-label{color:#71849c}.bench-val{color:#fff}.bench-delta{color:#28d49a}
 @media(max-width:1100px){.kpi-grid,.bench-grid{grid-template-columns:repeat(2,1fr)}.intel-grid{grid-template-columns:repeat(2,1fr)}.topbar-right .top-chip{display:none}}@media(max-width:700px){.block-container{padding-left:1rem;padding-right:1rem}.topbar{align-items:flex-start}.topbar-right{flex-wrap:wrap}.kpi-grid,.bench-grid,.intel-grid{grid-template-columns:1fr}}
+
+/* FINAL RESPONSIVE DESKTOP FIT — presentation only */
+[data-testid="stMainBlockContainer"],
+.stMainBlockContainer,
+[data-testid="stAppViewContainer"] .block-container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+    box-sizing: border-box !important;
+}
+
+[data-testid="stAppViewContainer"] .main {
+    width: 100% !important;
+}
+
+/* Increase visual scale so the dashboard reads like a real desktop application */
+.brand-title { font-size: 1.55rem !important; }
+.brand-subtitle { font-size: .72rem !important; }
+.top-chip, .live-pill { font-size: .68rem !important; }
+.page-title { font-size: 2rem !important; }
+.page-subtitle { font-size: .82rem !important; }
+.eyebrow { font-size: .68rem !important; }
+.section-name { font-size: 1rem !important; }
+.section-note { font-size: .66rem !important; }
+.intel-title { font-size: .84rem !important; }
+.intel-tag { font-size: .62rem !important; }
+.intel-value { font-size: .92rem !important; }
+.intel-desc { font-size: .68rem !important; }
+.kpi-label { font-size: .61rem !important; }
+.kpi-value { font-size: 1.8rem !important; }
+.kpi-note { font-size: .65rem !important; }
+.card-title { font-size: .86rem !important; }
+.card-caption { font-size: .64rem !important; }
+.matrix-table, .benchmark-table { font-size: .72rem !important; }
+.benchmark-table th { font-size: .60rem !important; }
+.benchmark-table td { font-size: .72rem !important; padding: 13px 14px !important; }
+.benchmark-table .metric-value { font-size: 1rem !important; }
+.benchmark-subhead { font-size: .76rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
