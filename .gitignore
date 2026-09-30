@@ -3,3 +3,7 @@ __pycache__/
 .ipynb_checkpoints/
 .streamlit/
 *.pt
+
+runs/
+
+test_hydrology/
